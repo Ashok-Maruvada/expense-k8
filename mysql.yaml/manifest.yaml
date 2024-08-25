@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: expense
+  labels:
+    component: mysql
+    tier: db
+    project: expense
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: mysql
+      project: expense
+      tier: db
+#this is pod definition
+  template:
+    metadata:
+      name: mysql
+      labels:
+        component: mysql
+        project: expense
+        tier: db
+    spec:
+      containers:
+      - name: mysql
+      # this image already there in learndevops143 account of dockerhub , previously pushed 
+        image: learndevops143/mysql:v1.0
+
+-----
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: expense
+spec:
+  selector:
+    component: mysql
+    project: expense
+    tier: db
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
